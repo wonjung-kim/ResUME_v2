@@ -42,7 +42,7 @@ def parse_args():
     p.add_argument("--max_train_batches", type=int, default=0, help="0 means full loader")
     p.add_argument("--max_val_batches", type=int, default=0)
     p.add_argument("--imagenet_root", type=str, default="",
-                   help="ImageNet root containing train/ and val/. If omitted, RESUME_IMAGENET_ROOT or dataloader default is used.")
+                   help="ImageNet root containing train/ and val/. If omitted, RESUME_IMAGENET_ROOT from the shell is used; there is no hard-coded fallback.")
     p.add_argument("--out", type=str, default="./information_estimate.json")
     p.add_argument("--save_entropy_model", type=str, default="")
     return p.parse_args()

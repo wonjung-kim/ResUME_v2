@@ -39,7 +39,7 @@ def parse_args():
                    help="Condition decoder on receiver-known normalized prefix depth")
     p.add_argument("--use_crc_prefix", action=argparse.BooleanOptionalAction, default=True)
     p.add_argument("--imagenet_root", type=str, default="",
-                   help="ImageNet root containing train/ and val/. If omitted, RESUME_IMAGENET_ROOT or dataloader default is used.")
+                   help="ImageNet root containing train/ and val/. If omitted, RESUME_IMAGENET_ROOT from the shell is used; there is no hard-coded fallback.")
     p.add_argument("--out_dir", type=str, default="./output_theory")
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--replace_every", type=int, default=0,

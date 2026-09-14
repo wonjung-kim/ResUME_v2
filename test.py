@@ -29,7 +29,7 @@ def parse_args():
     p.add_argument("--cbrs", type=str, default="0.00521,0.0104167,0.015625")
     p.add_argument("--channel", choices=["awgn", "rayleigh"], default="awgn")
     p.add_argument("--kodak_root", type=str, default="",
-                   help="Folder containing Kodak PNG images. If omitted, RESUME_KODAK_ROOT or dataloader default is used.")
+                   help="Folder containing Kodak PNG images. If omitted, RESUME_KODAK_ROOT from the shell is used; there is no hard-coded fallback.")
     p.add_argument("--out_dir", type=str, default="./test_output_theory")
     return p.parse_args()
 

@@ -61,16 +61,55 @@ All groups use the same modulation `M_l` at a given stage. Therefore the impleme
 - `pipeline_stage.sh`: complete stage-mode train -> information -> policy -> test pipeline.
 - `pipeline_group.sh`: complete group-mode pipeline.
 
-## Dataset paths
+## Dataset paths: configured entirely from the shell
 
-You can either use the original defaults or set paths explicitly.
+There are **no machine-specific dataset paths inside the Python code**. The launchers source `dataset_paths.sh`, so you can configure training/test data without editing `dataloader.py`, `train.py`, or `test.py`.
+
+### Option 1: edit `dataset_paths.sh` once
 
 ```bash
-export RESUME_IMAGENET_ROOT=/path/to/ImageNet   # contains train/ and val/
-export RESUME_KODAK_ROOT=/path/to/Kodak         # contains Kodak *.png files
+# dataset_paths.sh
+export IMAGENET_ROOT=/data/ImageNet   # must contain train/ and val/
+export KODAK_ROOT=/data/Kodak         # must directly contain kodim01.png, ...
 ```
 
-`train.py` and `estimate_information.py` also accept `--imagenet_root`; `test.py` accepts `--kodak_root`.
+Then run normally:
+
+```bash
+bash train.sh
+
+CKPT_PATH=./output_stage/best.pt \
+POLICY_PATH=./output_stage/policy.json \
+bash test.sh
+```
+
+Both full pipelines also read the same file:
+
+```bash
+bash pipeline_stage.sh
+GROUP_H=4 GROUP_W=4 bash pipeline_group.sh
+```
+
+### Option 2: set paths only for one command
+
+```bash
+IMAGENET_ROOT=/data/ImageNet PACKET_MODE=stage bash train.sh
+
+KODAK_ROOT=/data/Kodak \
+CKPT_PATH=/results/best.pt \
+POLICY_PATH=/results/policy.json \
+bash test.sh
+```
+
+### Option 3: use a separate path-config file
+
+```bash
+cp dataset_paths.sh my_server_paths.sh
+# edit my_server_paths.sh
+DATA_CONFIG=./my_server_paths.sh bash pipeline_stage.sh
+```
+
+The Python entry points still support explicit overrides: `train.py` and `estimate_information.py` accept `--imagenet_root`, while `test.py` accepts `--kodak_root`. If neither a CLI path nor the corresponding shell environment variable is supplied, the loader now raises a clear error instead of falling back to a hard-coded path.
 
 ## 0. Install and smoke-test
 

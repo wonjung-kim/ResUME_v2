@@ -5,9 +5,17 @@ from PIL import Image, UnidentifiedImageError
 
 def main():
     p = argparse.ArgumentParser("Find unreadable image files")
-    p.add_argument("--root", default=os.environ.get("RESUME_IMAGENET_ROOT", "/mnt/data/wonjung/datasets/ImageNet/train"))
+    p.add_argument(
+        "--root",
+        default=os.environ.get("RESUME_IMAGENET_ROOT", ""),
+        help="Image directory to scan. If omitted, uses RESUME_IMAGENET_ROOT from the shell.",
+    )
     p.add_argument("--out", default="./bad_imagenet_files.txt")
     args = p.parse_args()
+    if not args.root:
+        raise ValueError("Set RESUME_IMAGENET_ROOT or pass --root /path/to/images")
+    if not os.path.isdir(args.root):
+        raise FileNotFoundError(args.root)
 
     bad = []
     for dirpath, _, filenames in os.walk(args.root):
